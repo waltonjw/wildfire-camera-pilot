@@ -1,10 +1,25 @@
 # Modeling a Fast-response AI Wildfire Camera Network in Washington State 
 
+## Introduction
+
+This GIS project was completed as a capstone project in the [UC Davis GIS Certificate Program](https://cpe.ucdavis.edu/section/geographic-information-systems-gis-specialization-coursera).   This project models a real-world GIS analysis scenario in which a question or theory is developed, data sources are identified, a processing model is developed, and a conclusion with final map and data artifacts are generated.
+
+For this project, the question asked was:
+
+***Where in Washington State should 10-20 fast-response wildfire cameras be placed in order to test and prove this new technology platform in preparation for a wider rollout?***
+
+This suitability analysis takes into consideration the following:
+
+1. Maximizing viewshed by finding peaks
+2. Minimizing distance to existing road networks.
+3. Minimizing slope to find acceptable tower construction sites.
+4. Maximizing effectiveness by targeting medium to high risk wildfire regions.
+
 ## Background
 
-Wildfire activity in the western United States continues to increase in frequency and magnitude.   Today's larger and more intense fires are increasingly difficult to manage than in years past.   According to the US Congressional Research Service, the average number of acres burned per year has risen to 7.0 million acres annually.   The figure is more than double the average annual acreage burned in the 1990s.
+Wildfire activity in the western United States continues to increase in frequency and magnitude.   Today's larger and more intense fires are more difficult to manage than in years past.   According to the US Congressional Research Service, the average number of acres burned per year has risen to 7.0 million acres annually.   The figure is more than double the average annual acreage burned in the 1990s.
 
-One silver lining is that off-the-shelf technology is developing which promises to help identify wildfires when they are extremely young.   If a fire can be identified within minutes to several hours of ignition, often a rapid-strike approach can be used to fully contain the fire before it grows and requires a broader response.   This could change the way we fight wildfires.  This technology includes:
+One silver lining is that technology is developing which promises to help identify wildfires when they are extremely young.   If a fire can be identified within minutes to several hours after ignition, often a rapid-strike approach can be used to fully contain the fire before it grows and requires a broader response.   This could fundamentally change the way we fight wildfires.  This technology includes:
 
 1. High resolution visible band and infrared band cameras which can capture small, distant fires via smoke plume identification or radiation detection.
 
@@ -15,17 +30,6 @@ One silver lining is that off-the-shelf technology is developing which promises 
 
 Organizations such as [PanoAI](https://www.pano.ai/) and [AlertWildfire ](https://www.alertwildfire.org/) are already developing and/or integrating these technologies to achieve this goal of near-instant wildfire identification and rapid response management, and more information on their efforts can be seen on their respective websites.
 
-## Project Scope
-
-The goal of this project is to develop a model and tools to identify a set of candidate locations for a pilot program of rapid-detection wildfire cameras across Washington State.    If phrased as a question, that questions would be:
-
-***For a pilot program of wildfire camera tower installations in Washington State, where should they located to maximize effectiveness while minimizing installation and maintencance costs?***
-
-This type of project could be of use to program managers tasked with planning such a network, who wish to maximize coverage footprint, minimize cost, and prioritize monitoring locations based risk, effectiveness, and expense.   The goal is to create a ranked list of locations suitable for the deployment of this technology, whether it be 1, 10, or 100 cameras.  Because this project is aimed at an initial deployment program, it is executed with several key assumptions.
-
-1. The project assumes the use of technology which can be purchased today, including cameras, 50-foot self-supporting modular towers, commercially-available wireless data services and cloud-computing services.
-2. Because a pilot program would likely have limited funds, only sites which are accessible by roads passable with 4x4 vehicles will be considered.  The idea is that a two-person crew could deploy a node, with five 10-foot self-supporting tower sections, along with camera and its associated support infrastructure such as solar panel, battery, controller, and transceiver.   A wider implementation may wish to consider more expensive installation sites which require helicopter or walk-in access and would be executed in subsequent phases.  This initial project assumes drive-in access, even if the access route is rough double-track road which requires high-clearance 4x4 vehicles with winching and recovery equipment. 
-
 ## Data Sources
 
 The following public data sources will be used to develop the ranked list of road-accessible wildfire camera tower sites.
@@ -35,26 +39,135 @@ The following public data sources will be used to develop the ranked list of roa
 | ASTER V3 Digital Elevation Model                 | https://earthexplorer.usgs.gov/                              | DEM for viewshed analysis, slope constraints, elevation constraints, and ridgeline identification. |
 | BLM OR Ground Transportation GTRN Roads Line Hub | https://gbp-blm-egis.hub.arcgis.com/datasets/BLM-EGIS::blm-or-ground-transportation-gtrn-roads-line-hub | Digitized road network feature class for suitability analysis. |
 | USFS Wildfire Burn Probability                   | https://www.fs.usda.gov/rds/archive/Catalog/RDS-2020-0016    | Wildfire probability raster for ranking candidate sites.     |
-| MRLC Land Cover CONUS                            | https://www.mrlc.gov/data?f%5B0%5D=category%3Aland%20cover&f%5B1%5D=region%3Aconus | Ground cover type raster for area constraint.                |
 | WA DNR Boundary                                  | https://data-wadnr.opendata.arcgis.com/datasets/wadnr::wa-state-boundary | Washington State boundary polygon for constraining overall analysis. |
 
 
 
-## Methodology
+## Methods
 
-This project will create the ranked list of candidate wildfire camera sites using the following basic methodology:
+With the goal of finding at least 10 candidate sites for the AI-based wildfire camera pilot in Washington State, the following analysis was performed:
 
-1. Find a subset of Washington State land with ground cover types (forests, grasslands, herbaceous, etc.), which is reasonably fire prone.   Some analysis will be needed to determine which ground cover types to include, as there are many.   This subset of Washington State will be used for further processing.
-2. Using proximity tools, create a 500 foot buffer around roads.  500 feet is a reasonable distance two people could walk carrying 10-foot self-supporting tower sections one at a time.
-3. Create ground slope layer to be used for finding level areas for tower construction, with ground slope less that 5%.
-5. Create a minimum elevation layer to constrain candidate tower sites to higher elevation.
-6. Using hydrology tools, identify ridgelines which would maximize camera scan for a given installation.
-7. Using the criteria of ridgelines, ground slope, and road buffers, create a point feature class of candidate camera tower locations.  
-8. Rank the list of candidate camera tower locations by running viewshed/observer points and variable fire danger.   The exact balance of each needs some further research and will be subjective.
-9. Provide a final product of ranked camera tower locations along with their associated viewsheds.   Summarize the percent of high-risk lands covered by a variable number of camera tower count scenarios to help the reader understand diminishing returns.
+1. Mosaic together ASTER V3 DEM rasters and create a DEM limited to Washington State and high (> 4500 feet) elevation:
 
-## Expected Results
+   ![](images\high_elevation_dem.png)
 
-Because this project is constrained to road-accessible locations, there will likely be a sharp level of diminishing returns to the acres of land covered by each additional camera.  Washington State has some very high peaks with no road access which would make for superior tower locations, but erecting towers at these sites is vastly more expensive and dangerous than road-accessible sites.  These high-expense/high-yield locations should be saved for the production deployment after this first pilot phase has been completed.    
+   
 
-It is expected that a handful of candidate sites will be very suitable for a pilot deployment (i.e. a peak with 360 degree views with road access in a high-risk zone).    These will likely be near the top of the ranked candidate location list.   It is anticipated that favorable sites will drop off at a fairly high rate of diminishing returns.  
+2. Create a slope raster, constrained to Washington State high elevations, based on the input 30m ASTER V3 DEM:
+
+   ![](images\slope.png)
+
+   
+
+3. Create a Euclidian distance road buffer raster, based on the BLM road network polyline, constrained to Washington State high elevation raster from step #1.   Note that the BLM road network polyline is ALL roads in Washington, not just BLM roads:
+
+   ![](images\road_network.png)
+
+   Zoomed-in example:
+
+   ![](images\road_network_detailed.png)
+
+   
+
+   
+
+4. Find all peaks, based on the DEM from step #1, using the custom 'Peak' tool, available at https://www.arcgis.com/home/item.html?id=3528bd72847c439f88190a137a1d0e67    This custom tool works by inverting a subset of the hydrology tools available in the Spatial Analysis Extension.    Note that this raster contains a VERY large number of peaks, with the value of each raster cell being elevation in feet.   They are filtered later in the workflow using the 'Weighted Overlay' tool.
+
+   
+
+   ![](images\peaks.png)
+
+5. For the four core input rasters, (peak elevation, slope, distance to road, fire risk) reclassify each input on a 1-9 scale for uniformity, using the 'Classify Raster' tool.   These will be the input to the weighted overlay scoring step.
+
+   Fire probability classes (1-9):
+
+   ![](images\fire_risk_classes.png)
+
+   Slope classes (1-9):
+
+   ![](images\slope_classes.png)
+
+   Road proximity classes (1-2, zoomed for visibility), note: 3-9 are excluded (Restricted) as they are deemed distant, >300:
+
+   ![](images\distance_from_road_classes.png)
+
+   Peak elevation classes (1-9, zoomed for visiblity):
+
+   ![](images\peak_elevation_classes.png)
+
+   
+
+6. Each normalized raster for the criteria is then fed to the 'Weighted Overlay' tool to come up with a raw list of candidate sites.   These will be sites with low slope, high elevation, on a peak, close to an existing road, and in a mid-to high fire risk location.   This raster is then converted to points via the 'Raster to Point' tool.   The 'Extract Multi Values' tool is then run to augment the point feature class with nominal slope, elevation, distance to road, fire risk, and score from the input rasters.   For this project, the following parameters were used:
+
+   | Parameter                           | Value                |
+   | ----------------------------------- | -------------------- |
+   | Elevation                           | > 4500 feet          |
+   | Slope                               | < 15%                |
+   | Fire Risk                           | > 100 (18,000 scale) |
+   | Distance to Road                    | < 300 feet           |
+   | Camera Scanning Radius              | 20 miles             |
+   | Tower Height                        | 50 feet              |
+   | Surface Height (smoke column height | 1000 feet            |
+
+   The result of this weighted overlay tool execution, extraction of highest ranking sites, and multi-value point extraction is the candidate site point feature class which contained 208 highly clustered peaks for consideration.    Note the attribute table for the feature class has extracted fields from all input rasters, to help with final final filtering and sorting.
+
+   ![](images\candidate_sites.png)
+
+   ![](images\candidate_sitess_attributes.png)
+
+   
+
+7. Because peaks tend to cluster together, the results of the weighted overlay step are numerous - about 208 sites..   A manual digitizing step was performed to deduplicate candidate sites and come up with a final list of 13 sites.   Furthermore, a manual digitizing step was performed to name each site based on existing mapped features available in the underlying topographic basemap.
+
+   ![](images\final_13.png)
+
+8. Once the 13 sites are determined, the "Viewshed 2" tool is run to determine viewsheds for each of the 13 points.     This analysis made the assumptions, as seen above, that each tower would be 50 feet high and would detect smoke rising once it hit 1000 feet in height.   A 50 foot self-supporting tower, which is assembled in 10-foot sections, is a reasonably-sized tower which could be transported in a full size 4x4 truck. (i.e. five 10-foot sections stacked in the bed):
+
+   ![](images\viewshed.png)
+
+9. Manually execute the 'Summary Statistics' tool in order to total up the acres visible for each observer.   Add this sum to the feature class attribute table for the 13 sites and convert feet to acres using a Python expression in the 'field calculator' for the table.   This value represents acres visible per observer. (see below in Results section)
+
+10. The points feature class and the corresponding viewshed raster are the two core products of the analysis.  Both can be used to determine the placement of the cameras in the pilot program via final human analysis.
+
+Most of this processing, with the exception of the final site selection and site name digitizing, was performed using the ArcMap model builder so it can be reused across any area for the same analysis:
+
+![workflow](images\workflow.png)
+
+
+
+## Results
+
+As noted above, the raw results of the analysis resulted in over 200 candidate sites.   While this number was impressive, many of the sites were clustered closely together and needed to be deduplicated manually.    Once this was a done, a much more reasonable 13 sites remained.    This allowed a manual digitization of site names by overlaying the point feature class on a USGS topo map.   Every peak identified via this model had a name on the topographic map layer.
+
+
+
+![](images\site_list.png)
+
+
+
+The subsequent viewshed analysis resulted in a mix of overlapping and non-overlapping viewsheds.   The cells covered count for each point in the viewshed analysis can further be used to sort and prioritize in the final human-made decision of which finalist to include in the pilot program.   This can be read from the meta-data tabled provided by the viewshed tool.   
+
+
+
+![](images\viewsheds.png)
+
+Each row of the viewshed raster attribute table refers to a region.  A region can be a standalone viewshed or any combination of overlapping viewsheds.   This is why there are more records than viewsheds.  In the final map document, each associated viewshed is show with each point to allow the reader to understand the most effective fire camera tower locations
+
+The 'Summary Statistics' too is used to take the region table and summarize by observer.   The cell count is converted to acres by way of a simple Python field calculator execution.   This gives a total acres covered per observer value, and important attribute when camera sites are being evaluated:
+
+
+
+![](images\acres_covered.png)
+
+
+
+## Conclusion
+
+This analysis proved to be very effective in determining a short list of pilot program sites (i.e between 10-20).   It should be noted that for a production implementation analysis which aims to maximize coverage over a region such as a state, county or forest boundary would likely take a very different approach.   This second phase approach would need to use a much different technique, such as:
+
+1. Divide region of analysis, such as Washington State, into zones
+2. Find the highest peak(s) per zone, with each zone being approximately the size of the camera scan radius (i.e. 20 miles)
+3. Perform analysis per zone.  Note: the ArcMap Viewshed tool has a maximum observer count of 16 and is very CPU-intensive.   This iterative approach is needed.
+4. Merge zones and analyze to determine overall camera placement.
+
+This second-phase analysis would likely result in 100-200 cameras rather than the pilot program range of 10-20 cameras.   This second-phase analysis would make an excellent research project to follow the completion of this pilot program.   One interesting aspect of a second-phase analysis is finding sites which are so good, they may warrant the extending of road where no road currently exists, so different road proximity requirements may be warranted.
