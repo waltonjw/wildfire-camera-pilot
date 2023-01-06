@@ -49,23 +49,23 @@ With the goal of finding at least 10 candidate sites for the AI-based wildfire c
 
 1. Mosaic together ASTER V3 DEM rasters and create a DEM limited to Washington State and high (> 4500 feet) elevation:
 
-   ![](images\high_elevation_dem.png)
+   ![](images/high_elevation_dem.png)
 
    
 
 2. Create a slope raster, constrained to Washington State high elevations, based on the input 30m ASTER V3 DEM:
 
-   ![](images\slope.png)
+   ![](images/slope.png)
 
    
 
 3. Create a Euclidian distance road buffer raster, based on the BLM road network polyline, constrained to Washington State high elevation raster from step #1.   Note that the BLM road network polyline is ALL roads in Washington, not just BLM roads:
 
-   ![](images\road_network.png)
+   ![](images/road_network.png)
 
    Zoomed-in example:
 
-   ![](images\road_network_detailed.png)
+   ![](images/road_network_detailed.png)
 
    
 
@@ -75,25 +75,25 @@ With the goal of finding at least 10 candidate sites for the AI-based wildfire c
 
    
 
-   ![](images\peaks.png)
+   ![](images/peaks.png)
 
 5. For the four core input rasters, (peak elevation, slope, distance to road, fire risk) reclassify each input on a 1-9 scale for uniformity, using the 'Classify Raster' tool.   These will be the input to the weighted overlay scoring step.
 
    Fire probability classes (1-9):
 
-   ![](images\fire_risk_classes.png)
+   ![](images/fire_risk_classes.png)
 
    Slope classes (1-9):
 
-   ![](images\slope_classes.png)
+   ![](images/slope_classes.png)
 
    Road proximity classes (1-2, zoomed for visibility), note: 3-9 are excluded (Restricted) as they are deemed distant, >300:
 
-   ![](images\distance_from_road_classes.png)
+   ![](images/distance_from_road_classes.png)
 
    Peak elevation classes (1-9, zoomed for visiblity):
 
-   ![](images\peak_elevation_classes.png)
+   ![](images/peak_elevation_classes.png)
 
    
 
@@ -111,19 +111,19 @@ With the goal of finding at least 10 candidate sites for the AI-based wildfire c
 
    The result of this weighted overlay tool execution, extraction of highest ranking sites, and multi-value point extraction is the candidate site point feature class which contained 208 highly clustered peaks for consideration.    Note the attribute table for the feature class has extracted fields from all input rasters, to help with final final filtering and sorting.
 
-   ![](images\candidate_sites.png)
+   ![](images/candidate_sites.png)
 
-   ![](images\candidate_sitess_attributes.png)
+   ![](images/candidate_sitess_attributes.png)
 
    
 
 7. Because peaks tend to cluster together, the results of the weighted overlay step are numerous - about 208 sites..   A manual digitizing step was performed to deduplicate candidate sites and come up with a final list of 13 sites.   Furthermore, a manual digitizing step was performed to name each site based on existing mapped features available in the underlying topographic basemap.
 
-   ![](images\final_13.png)
+   ![](images/final_13.png)
 
 8. Once the 13 sites are determined, the "Viewshed 2" tool is run to determine viewsheds for each of the 13 points.     This analysis made the assumptions, as seen above, that each tower would be 50 feet high and would detect smoke rising once it hit 1000 feet in height.   A 50 foot self-supporting tower, which is assembled in 10-foot sections, is a reasonably-sized tower which could be transported in a full size 4x4 truck. (i.e. five 10-foot sections stacked in the bed):
 
-   ![](images\viewshed.png)
+   ![](images/viewshed.png)
 
 9. Manually execute the 'Summary Statistics' tool in order to total up the acres visible for each observer.   Add this sum to the feature class attribute table for the 13 sites and convert feet to acres using a Python expression in the 'field calculator' for the table.   This value represents acres visible per observer. (see below in Results section)
 
@@ -131,7 +131,7 @@ With the goal of finding at least 10 candidate sites for the AI-based wildfire c
 
 Most of this processing, with the exception of the final site selection and site name digitizing, was performed using the ArcMap model builder so it can be reused across any area for the same analysis:
 
-![workflow](images\workflow.png)
+![workflow](images/workflow.png)
 
 
 
@@ -141,7 +141,7 @@ As noted above, the raw results of the analysis resulted in over 200 candidate s
 
 
 
-![](images\site_list.png)
+![](images/site_list.png)
 
 
 
@@ -149,7 +149,7 @@ The subsequent viewshed analysis resulted in a mix of overlapping and non-overla
 
 
 
-![](images\viewsheds.png)
+![](images/viewsheds.png)
 
 Each row of the viewshed raster attribute table refers to a region.  A region can be a standalone viewshed or any combination of overlapping viewsheds.   This is why there are more records than viewsheds.  In the final map document, each associated viewshed is show with each point to allow the reader to understand the most effective fire camera tower locations
 
@@ -157,7 +157,7 @@ The 'Summary Statistics' too is used to take the region table and summarize by o
 
 
 
-![](images\acres_covered.png)
+![](images/acres_covered.png)
 
 
 
