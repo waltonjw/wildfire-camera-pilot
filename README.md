@@ -135,6 +135,16 @@ Most of this processing, with the exception of the final site selection and site
 
 
 
+Lastly, it is important to note that this model was built in a generic method which allows execution over other states or governmental jurisdictions such as national forests.   It also allows for running different scenarios such as lower elevation sites and more remote sites.  Inputs and variables are parameterized:
+
+
+
+![](images/model_inputs.png)
+
+
+
+
+
 ## Results
 
 As noted above, the raw results of the analysis resulted in over 200 candidate sites.   While this number was impressive, many of the sites were clustered closely together and needed to be deduplicated manually.    Once this was a done, a much more reasonable 13 sites remained.    This allowed a manual digitization of site names by overlaying the point feature class on a USGS topo map.   Every peak identified via this model had a name on the topographic map layer.
@@ -163,11 +173,11 @@ The 'Summary Statistics' too is used to take the region table and summarize by o
 
 ## Conclusion
 
-This analysis proved to be very effective in determining a short list of pilot program sites (i.e between 10-20).   It should be noted that for a production implementation analysis which aims to maximize coverage over a region such as a state, county or forest boundary would likely take a very different approach.   This second phase approach would need to use a much different technique, such as:
+This analysis proved to be very effective in determining a short list of pilot program sites (i.e between 10-20).   It should be noted that a production implementation analysis which aims to maximize coverage over a region such as a state, county or forest boundary would take a very different approach.   This second phase approach would need to use a much different technique, such as:
 
 1. Divide region of analysis, such as Washington State, into zones
-2. Find the highest peak(s) per zone, with each zone being approximately the size of the camera scan radius (i.e. 20 miles)
-3. Perform analysis per zone.  Note: the ArcMap Viewshed tool has a maximum observer count of 16 and is very CPU-intensive.   This iterative approach is needed.
+2. Find the highest peak(s) per zone, with each zone being approximately 0.5 to 1 times the size of the camera scan radius (i.e. 20 miles)
+3. Perform analysis per zone.  Note: the ArcMap Viewshed tool has a maximum observer count of 16 and is very CPU-intensive.   This iterative approach is needed to cover a reasonably large area such as a state or county.
 4. Merge zones and analyze to determine overall camera placement.
 
-This second-phase analysis would likely result in 100-200 cameras rather than the pilot program range of 10-20 cameras.   This second-phase analysis would make an excellent research project to follow the completion of this pilot program.   One interesting aspect of a second-phase analysis is finding sites which are so good, they may warrant the extending of road where no road currently exists, so different road proximity requirements may be warranted.
+This second-phase analysis would likely result in 100-200 cameras rather than the pilot program range of 10-20 cameras.   This second-phase analysis would make an excellent research project to follow the completion of this pilot program.   One interesting aspect of a second-phase analysis is finding sites which score so highly, they may warrant the extending of road where no road currently exists, so different road proximity requirements may be warranted.
