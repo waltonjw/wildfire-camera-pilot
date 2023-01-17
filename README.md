@@ -1,5 +1,7 @@
 # Modeling a Fast-response AI Wildfire Camera Network in Washington State 
 
+
+
 ## Introduction
 
 This GIS project was completed as a capstone project in the [UC Davis GIS Certificate Program](https://cpe.ucdavis.edu/section/geographic-information-systems-gis-specialization-coursera).   This project models a real-world GIS analysis scenario in which a question or theory is developed, data sources are identified, a processing model is developed, and a conclusion with final map and data artifacts are generated.
@@ -43,7 +45,7 @@ The following public data sources will be used to develop the ranked list of roa
 
 
 
-## Methods
+## Methodology
 
 With the goal of finding at least 10 candidate sites for the AI-based wildfire camera pilot in Washington State, the following analysis was performed:
 
@@ -77,6 +79,10 @@ With the goal of finding at least 10 candidate sites for the AI-based wildfire c
 
    ![](images/peaks.png)
 
+   
+
+   
+
 5. For the four core input rasters, (peak elevation, slope, distance to road, fire risk) reclassify each input on a 1-9 scale for uniformity, using the 'Classify Raster' tool.   These will be the input to the weighted overlay scoring step.
 
    Fire probability classes (1-9):
@@ -87,9 +93,11 @@ With the goal of finding at least 10 candidate sites for the AI-based wildfire c
 
    ![](images/slope_classes.png)
 
-   Road proximity classes (1-2, zoomed for visibility), note: 3-9 are excluded (Restricted) as they are deemed distant, >300:
+   Road proximity classes (1-2, zoomed for visibility), note: 3-9 are excluded (Restricted) as they are deemed distant, (> 300 feet):
 
    ![](images/distance_from_road_classes.png)
+
+   
 
    Peak elevation classes (1-9, zoomed for visiblity):
 
@@ -99,43 +107,51 @@ With the goal of finding at least 10 candidate sites for the AI-based wildfire c
 
 6. Each normalized raster for the criteria is then fed to the 'Weighted Overlay' tool to come up with a raw list of candidate sites.   These will be sites with low slope, high elevation, on a peak, close to an existing road, and in a mid-to high fire risk location.   This raster is then converted to points via the 'Raster to Point' tool.   The 'Extract Multi Values' tool is then run to augment the point feature class with nominal slope, elevation, distance to road, fire risk, and score from the input rasters.   For this project, the following parameters were used:
 
-   | Parameter                           | Value                |
-   | ----------------------------------- | -------------------- |
-   | Elevation                           | > 4500 feet          |
-   | Slope                               | < 15%                |
-   | Fire Risk                           | > 100 (18,000 scale) |
-   | Distance to Road                    | < 300 feet           |
-   | Camera Scanning Radius              | 20 miles             |
-   | Tower Height                        | 50 feet              |
-   | Surface Height (smoke column height | 1000 feet            |
+   | Parameter                           | Value       |
+   | ----------------------------------- | ----------- |
+   | Elevation                           | > 4500 feet |
+   | Slope                               | < 15%       |
+   | Fire Risk Factor                    | > 100       |
+   | Distance to Road                    | < 300 feet  |
+   | Camera Scanning Radius              | 20 miles    |
+   | Tower Height                        | 50 feet     |
+   | Surface Height (smoke column height | 1000 feet   |
 
-   The result of this weighted overlay tool execution, extraction of highest ranking sites, and multi-value point extraction is the candidate site point feature class which contained 208 highly clustered peaks for consideration.    Note the attribute table for the feature class has extracted fields from all input rasters, to help with final final filtering and sorting.
+   
+
+   The result of this weighted overlay tool execution, extraction of highest ranking sites, and multi-value point extraction is a candidate site point feature class which contained 208 highly clustered peaks for consideration.    Note the attribute table for the feature class has extracted fields from all input rasters, to help with final final filtering and sorting.
 
    ![](images/candidate_sites.png)
+
+   
 
    ![](images/candidate_sitess_attributes.png)
 
    
 
-7. Because peaks tend to cluster together, the results of the weighted overlay step are numerous - about 208 sites..   A manual digitizing step was performed to deduplicate candidate sites and come up with a final list of 13 sites.   Furthermore, a manual digitizing step was performed to name each site based on existing mapped features available in the underlying topographic basemap.
+7. Because peaks tend to cluster together, the results of the weighted overlay step are numerous: 208 sites..   A manual digitizing step was performed to deduplicate candidate sites and come up with a final list of 13 sites.   Furthermore, a secondary manual digitizing step was performed to name each site based on existing mapped features available in the underlying topographic basemap.
 
    ![](images/final_13.png)
+
+   
 
 8. Once the 13 sites are determined, the "Viewshed 2" tool is run to determine viewsheds for each of the 13 points.     This analysis made the assumptions, as seen above, that each tower would be 50 feet high and would detect smoke rising once it hit 1000 feet in height.   A 50 foot self-supporting tower, which is assembled in 10-foot sections, is a reasonably-sized tower which could be transported in a full size 4x4 truck. (i.e. five 10-foot sections stacked in the bed):
 
    ![](images/viewshed.png)
 
+   
+
 9. Manually execute the 'Summary Statistics' tool in order to total up the acres visible for each observer.   Add this sum to the feature class attribute table for the 13 sites and convert feet to acres using a Python expression in the 'field calculator' for the table.   This value represents acres visible per observer. (see below in Results section)
 
 10. The points feature class and the corresponding viewshed raster are the two core products of the analysis.  Both can be used to determine the placement of the cameras in the pilot program via final human analysis.
 
-Most of this processing, with the exception of the final site selection and site name digitizing, was performed using the ArcMap model builder so it can be reused across any area for the same analysis:
+Most of this processing, with the exception of the final site filtering and site name digitizing, was performed using the ArcMap model builder so it can be reused across any area for the same analysis:
 
 ![workflow](images/workflow.png)
 
 
 
-Lastly, it is important to note that this model was built in a generic method which allows execution over other states or governmental jurisdictions such as national forests.   It also allows for running different scenarios such as lower elevation sites and more remote sites.  Inputs and variables are parameterized:
+It is important to note that this model was built in a generic method which allows execution over other states or governmental jurisdictions such as national forests.   It also allows for running different scenarios such as lower elevation sites and more remote sites.  Inputs and variables are parameterized:
 
 
 
@@ -161,7 +177,7 @@ The subsequent viewshed analysis resulted in a mix of overlapping and non-overla
 
 ![](images/viewsheds.png)
 
-Each row of the viewshed raster attribute table refers to a region.  A region can be a standalone viewshed or any combination of overlapping viewsheds.   This is why there are more records than viewsheds.  In the final map document, each associated viewshed is show with each point to allow the reader to understand the most effective fire camera tower locations
+Each row of the viewshed raster attribute table refers to a region.  A region can be a standalone viewshed or any combination of overlapping viewsheds.   This is why there are more records than viewsheds.  In the final map document, each associated viewshed is shown with each point to allow the reader to understand the most effective fire camera tower locations
 
 The 'Summary Statistics' too is used to take the region table and summarize by observer.   The cell count is converted to acres by way of a simple Python field calculator execution.   This gives a total acres covered per observer value, and important attribute when camera sites are being evaluated:
 
@@ -171,7 +187,15 @@ The 'Summary Statistics' too is used to take the region table and summarize by o
 
 
 
-## Conclusion
+## Project Artifacts
+
+- The custom geoprocessing model, exported PDF map, and a map package are available in the [arcmap](./arcmap) directory of this github repository.  
+
+- A web map of the final results is available on [ArcGIS Online](https://www.arcgis.com/home/item.html?id=6907fb5c98ac403da85b3da7e030d93d)
+
+  
+
+## Conclusions
 
 This analysis proved to be very effective in determining a short list of pilot program sites (i.e between 10-20).   It should be noted that a production implementation analysis which aims to maximize coverage over a region such as a state, county or forest boundary would take a very different approach.   This second phase approach would need to use a much different technique, such as:
 
@@ -180,4 +204,4 @@ This analysis proved to be very effective in determining a short list of pilot p
 3. Perform analysis per zone.  Note: the ArcMap Viewshed tool has a maximum observer count of 16 and is very CPU-intensive.   This iterative approach is needed to cover a reasonably large area such as a state or county.
 4. Merge zones and analyze to determine overall camera placement.
 
-This second-phase analysis would likely result in 100-200 cameras rather than the pilot program range of 10-20 cameras.   This second-phase analysis would make an excellent research project to follow the completion of this pilot program.   One interesting aspect of a second-phase analysis is finding sites which score so highly, they may warrant the extending of road where no road currently exists, so different road proximity requirements may be warranted.
+This second-phase analysis would likely result in 100-200 cameras rather than the pilot program range of 10-20 cameras.   This second-phase analysis would make an excellent research project to follow the completion of this pilot program.   One interesting aspect of a second-phase analysis is finding sites which score so highly, they may warrant the extending of road where no road currently exists, so dynamic road proximity requirements may be warranted.
