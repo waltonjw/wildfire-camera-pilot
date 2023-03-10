@@ -6,7 +6,7 @@ Geographic Information Systems (GIS) Specialization, *Course 5 - Capstone Projec
 
 UC Davis/Coursera, January 3, 2023
 
-[GitHub](https://github.com/waltonjw/wildfire-camera-pilot)
+[Project on GitHub](https://github.com/waltonjw/wildfire-camera-pilot)
 
 ## Introduction
 
