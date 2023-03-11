@@ -10,7 +10,7 @@ UC Davis/Coursera, January 3, 2023
 
 ## Introduction
 
-This GIS project was completed as the capstone project in the [UC Davis GIS Certificate Program](https://cpe.ucdavis.edu/section/geographic-information-systems-gis-specialization-coursera).   This project models a real-world GIS analysis scenario in which a question or theory is developed, data sources are identified, a processing model is developed, and a conclusion with final map and data artifacts are generated.
+This GIS project was completed as the capstone project in the [UC Davis GIS Certificate Program](https://cpe.ucdavis.edu/section/geographic-information-systems-gis-specialization-coursera).   This project models a real-world GIS analysis scenario in which a question or theory is developed, data sources are identified, a processing model is developed, and a conclusion with final map and data artifacts is generated.
 
 For this project, the question asked was:
 
@@ -33,7 +33,7 @@ One silver lining is that technology is developing which promises to help identi
 
 2. High-speed wireless data networks such as SpaceX's Starlink or terrestrial-based 5G networks provided by companies such as TMobile, Verizon,  AT&T, and others.   Point-to-point microwave, while not a new technology, has dropped in price considerably as well and should also be included in this class of technology.
 3. AI-based image and video classification engines which can automatically identify wildfires from telemetry streams, with acceptable false-positive and false-negative rates.
-4. Concurrent computing infrastructure, such as services offered by AWS and Microsoft Azure which can execute image classification, at scale, and in real time, across multiple streams and escalate potential fires to human operators in an intelligent and efficient workflows.
+4. Concurrent computing infrastructure, such as services offered by AWS and Microsoft Azure which can execute image classification, at scale, and in real time, across multiple streams and escalate potential fires to human operators in intelligent and efficient workflows.
 5. Mature GIS platforms such as ArcGIS and QGIS which can help identify optimal placement of monitoring nodes.
 
 Organizations such as [PanoAI](https://www.pano.ai/) and [AlertWildfire ](https://www.alertwildfire.org/) are already developing and/or integrating these technologies to work toward this goal of near-instant wildfire identification and rapid response management.  More information on their efforts can be seen on their respective websites.
@@ -183,7 +183,7 @@ The subsequent viewshed analysis resulted in a mix of overlapping and non-overla
 
 Each row of the viewshed raster attribute table refers to a region.  A region can be a standalone viewshed or any combination of overlapping viewsheds.   This is why there are more records than viewsheds.  In the final map document, each associated viewshed is shown with each point to allow the reader to understand the most effective fire camera tower locations
 
-The 'Summary Statistics' too is used to take the region table and summarize by observer.   The cell count is converted to acres by way of a simple Python field calculator execution.   This gives a total acres covered per observer value, and important attribute when camera sites are being evaluated:
+The 'Summary Statistics' tool is used to take the region table and summarize by observer.   The cell count is converted to acres by way of a simple Python field calculator execution.   This gives a total acres covered per observer value, and important attribute when camera sites are being evaluated:
 
 
 
